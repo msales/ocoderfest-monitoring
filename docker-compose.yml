@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+    influxdb:
+        container_name: influxdb.ocoderfest.dev
+        build: ./docker/influxdb
+        networks:
+            - ocoderfest-dev
+        ports:
+            - 8086:8086
+            - 8083:8083
+
+    grafana:
+        container_name: grafana.ocoderfest.dev
+        build: ./docker/grafana
+        restart: always
+        networks:
+            - ocoderfest-dev
+        ports:
+            - 3000:3000
+        depends_on:
+            - mysql
+
+    mysql:
+        container_name: mysql.ocoderfest.dev
+        build: ./docker/mysql
+        networks:
+            - ocoderfest-dev
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=grafana
+
+    telegraf:
+        container_name: telegraf.ocoderfest.dev
+        build: ./docker/telegraf
+        restart: always
+        networks:
+            - ocoderfest-dev
+        ports:
+            - 8125:8125/udp
+
+    reverse-proxy:
+        container_name: reverse-proxy.ocoderfest.dev
+        build: ./docker/reverse-proxy
+        restart: always
+        networks:
+            - ocoderfest-dev
+        ports:
+            - 8888:8888
+        depends_on:
+            - influxdb
+            - grafana
+
+networks:
+    ocoderfest-dev:
+        external: true
