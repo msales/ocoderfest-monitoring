@@ -2,7 +2,7 @@ version: "3"
 
 services:
     influxdb:
-        container_name: influxdb.ocoderfest.msales
+        container_name: influxdb.container
         build: ./docker/influxdb
         networks:
             - ocoderfest-msales
@@ -10,7 +10,7 @@ services:
             - 8086:8086
 
     grafana:
-        container_name: grafana.ocoderfest.msales
+        container_name: grafana.container
         build: ./docker/grafana
         restart: always
         networks:
@@ -20,7 +20,7 @@ services:
             - influxdb
 
     mysql:
-        container_name: mysql.ocoderfest.msales
+        container_name: mysql.container
         build: ./docker/mysql
         networks:
             - ocoderfest-msales
@@ -29,7 +29,7 @@ services:
             - MYSQL_DATABASE=grafana
 
     telegraf:
-        container_name: telegraf.ocoderfest.msales
+        container_name: telegraf.container
         build: ./docker/telegraf
         restart: always
         networks:
@@ -38,20 +38,20 @@ services:
             - 8125:8125/udp
 
     mongo:
-        container_name: mongo.ocoderfest.msales
+        container_name: mongo.container
         build: ./docker/mongo
         networks:
             - ocoderfest-msales
 
     elasticsearch:
-        container_name: elasticsearch.ocoderfest.msales
+        container_name: elasticsearch.container
         build: ./docker/elasticsearch
         command: "elasticsearch -Des.cluster.name='graylog'"
         networks:
             - ocoderfest-msales
 
     graylog:
-        container_name: graylog.ocoderfest.msales
+        container_name: graylog.container
         build: ./docker/graylog
         environment:
             GRAYLOG_PASSWORD_SECRET: somepasswordpepper
@@ -64,7 +64,7 @@ services:
             - ocoderfest-msales
 
     reverse-proxy:
-        container_name: reverse-proxy.ocoderfest.msales
+        container_name: reverse-proxy.container
         build: ./docker/reverse-proxy
         restart: always
         networks:
